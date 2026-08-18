@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card } from '@/lib/types';
-import { Quote } from 'lucide-react';
+import { Quote, ArrowUpRight } from 'lucide-react';
 
 interface QuoteCardProps {
   card: Card;
@@ -10,6 +10,13 @@ interface QuoteCardProps {
 }
 
 export const QuoteCard: React.FC<QuoteCardProps> = ({ card, onClick }) => {
+  const handleOpenSource = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (card.url) {
+      window.open(card.url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div
       onClick={onClick}
@@ -17,11 +24,21 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ card, onClick }) => {
     >
       <div className="flex items-center justify-between mb-4">
         <Quote className="w-5 h-5 text-accent/80" />
-        {card.domain && (
+        {card.url ? (
+          <button
+            type="button"
+            onClick={handleOpenSource}
+            title={`Visit ${card.domain || card.url}`}
+            className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-accent truncate max-w-[150px] transition-colors group/link"
+          >
+            <span className="truncate group-hover/link:underline">{card.domain || 'Source'}</span>
+            <ArrowUpRight className="w-3 h-3 opacity-60 group-hover/link:opacity-100 shrink-0" />
+          </button>
+        ) : card.domain ? (
           <span className="text-[11px] text-muted-foreground truncate max-w-[140px]">
             {card.domain}
           </span>
-        )}
+        ) : null}
       </div>
 
       <blockquote className="font-serif italic text-lg sm:text-xl text-foreground leading-relaxed mb-4">

@@ -193,10 +193,11 @@ export default function ReaderPage() {
               href={card.url}
               target="_blank"
               rel="noreferrer"
-              title="Original Source"
-              className="p-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 opacity-70 hover:opacity-100 transition-all ml-1"
+              title={`Visit original ${card.domain || 'website'}`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/15 hover:bg-accent/25 text-accent text-xs font-semibold transition-all ml-1"
             >
-              <ExternalLink className="w-4 h-4" />
+              <span>Visit Source</span>
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
         </div>
@@ -292,9 +293,28 @@ export default function ReaderPage() {
           )}
         </article>
 
+        {/* Original Article Link CTA Footer */}
+        {card.url && (
+          <div className="pt-6 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="text-xs opacity-70">
+              <span>Original article from </span>
+              <span className="font-semibold">{card.domain || 'the web'}</span>
+            </div>
+            <a
+              href={card.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:opacity-90 transition-opacity self-start sm:self-auto shadow-xs"
+            >
+              <span>Read on Original Website</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        )}
+
         {/* Tags Footer */}
         {card.tags && card.tags.length > 0 && (
-          <div className="pt-8 border-t border-black/10 dark:border-white/10 flex flex-wrap gap-1.5">
+          <div className="pt-4 flex flex-wrap gap-1.5">
             {card.tags.map((tag, idx) => (
               <span
                 key={idx}

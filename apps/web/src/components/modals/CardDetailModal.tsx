@@ -151,9 +151,11 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                 href={card.url}
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                title={`Visit ${card.domain || 'original website'}`}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 hover:bg-accent/20 text-accent text-xs font-semibold transition-all hover:scale-105"
               >
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Visit Website</span>
               </a>
             )}
 
@@ -176,6 +178,27 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
         {/* Modal Scrollable Body */}
         <div className="p-6 overflow-y-auto space-y-5 flex-1">
+          {/* Direct Source URL banner if present */}
+          {card.url && (
+            <div className="flex items-center justify-between p-3 rounded-2xl bg-secondary/40 border border-border/60">
+              <div className="flex items-center gap-2 truncate max-w-[70%]">
+                {card.favicon && (
+                  <img src={card.favicon} alt="" className="w-4 h-4 rounded-xs shrink-0" />
+                )}
+                <span className="text-xs font-mono text-muted-foreground truncate">{card.url}</span>
+              </div>
+              <a
+                href={card.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline shrink-0"
+              >
+                <span>Visit Website</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          )}
+
           {/* Cover Media if available */}
           {card.imageUrl && (
             <div className="w-full rounded-2xl overflow-hidden max-h-72 bg-muted flex items-center justify-center">
