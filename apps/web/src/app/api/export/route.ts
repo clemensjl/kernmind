@@ -7,9 +7,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const format = searchParams.get('format') || 'json';
 
-    const cards = getAllCards();
-    const spaces = getSmartSpaces();
-    const settings = getSettings();
+    const cards = await getAllCards();
+    const spaces = await getSmartSpaces();
+    const settings = await getSettings();
 
     if (format === 'markdown') {
       const zip = new JSZip();
@@ -44,7 +44,7 @@ ${card.ocrText ? `\n\n### Extracted Text (OCR):\n${card.ocrText}` : ''}
         zip.file(filename, mdContent);
       });
 
-      // Add index.json
+      // Add manifest.json
       zip.file('manifest.json', JSON.stringify({ version: '1.0', exportDate: new Date().toISOString(), totalCards: cards.length, spaces }, null, 2));
 
       const zipArrayBuffer = await zip.generateAsync({ type: 'arraybuffer' });

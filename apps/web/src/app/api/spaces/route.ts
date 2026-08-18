@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSmartSpaces, createSmartSpace, deleteSmartSpace } from '@/lib/db';
+import { getSmartSpaces, createSmartSpace } from '@/lib/db';
 
 export async function GET() {
   try {
-    const spaces = getSmartSpaces();
+    const spaces = await getSmartSpaces();
     return NextResponse.json({ success: true, spaces });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Name and query are required' }, { status: 400 });
     }
 
-    const space = createSmartSpace({
+    const space = await createSmartSpace({
       name: body.name,
       emoji: body.emoji || '✨',
       query: body.query,

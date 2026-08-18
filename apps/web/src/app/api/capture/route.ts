@@ -8,7 +8,7 @@ import { Card, CardType } from '@/lib/types';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const settings = getSettings();
+    const settings = await getSettings();
 
     let {
       url,
@@ -105,8 +105,8 @@ export async function POST(request: NextRequest) {
       ])
     );
 
-    // 5. Create card in SQLite database
-    const newCard = createCard({
+    // 5. Create card in database
+    const newCard = await createCard({
       type: detectedType,
       title: finalTitle,
       content,

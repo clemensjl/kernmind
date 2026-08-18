@@ -7,7 +7,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const deleted = deleteSmartSpace(id);
+    const deleted = await deleteSmartSpace(id);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Space not found' }, { status: 404 });
     }

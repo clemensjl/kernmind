@@ -1,28 +1,45 @@
-import Database from 'better-sqlite3';
+import { createClient, Client } from '@libsql/client';
 import path from 'path';
 import fs from 'fs';
 import { Card, SmartSpace, Settings, SearchFilter } from './types';
 
-const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
+let dbClient: Client | null = null;
+let isInitialized = false;
 
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
+export function getDb(): Client {
+  if (!dbClient) {
+    const tursoUrl = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL;
+    const tursoAuthToken = process.env.TURSO_AUTH_TOKEN;
 
-const dbPath = path.join(dataDir, 'openmind.db');
-let dbInstance: Database.Database | null = null;
-
-export function getDb(): Database.Database {
-  if (!dbInstance) {
-    dbInstance = new Database(dbPath);
-    dbInstance.pragma('journal_mode = WAL');
-    initTables(dbInstance);
+    if (tursoUrl && (tursoUrl.startsWith('libsql://') || tursoUrl.startsWith('https://') || tursoUrl.startsWith('http://'))) {
+      // Cloud Turso / LibSQL Database (For Vercel / Production)
+      dbClient = createClient({
+        url: tursoUrl,
+        authToken: tursoAuthToken,
+      });
+    } else {
+      // Local SQLite Database file
+      const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
+      if (typeof window === 'undefined' && !fs.existsSync(dataDir)) {
+        try {
+          fs.mkdirSync(dataDir, { recursive: true });
+        } catch {}
+      }
+      const dbFilePath = path.join(dataDir, 'openmind.db');
+      dbClient = createClient({
+        url: `file:${dbFilePath.replace(/\\/g, '/')}`,
+      });
+    }
   }
-  return dbInstance;
+
+  return dbClient;
 }
 
-function initTables(db: Database.Database) {
-  db.exec(`
+export async function ensureTablesInitialized() {
+  if (isInitialized) return;
+  const db = getDb();
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS cards (
       id TEXT PRIMARY KEY,
       type TEXT NOT NULL,
@@ -47,7 +64,9 @@ function initTables(db: Database.Database) {
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL
     );
+  `);
 
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS spaces (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -58,36 +77,34 @@ function initTables(db: Database.Database) {
       orderIndex INTEGER NOT NULL DEFAULT 0,
       createdAt TEXT NOT NULL
     );
+  `);
 
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS settings (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
-
-    CREATE INDEX IF NOT EXISTS idx_cards_type ON cards(type);
-    CREATE INDEX IF NOT EXISTS idx_cards_created ON cards(createdAt);
-    CREATE INDEX IF NOT EXISTS idx_cards_favorite ON cards(isFavorite);
-    CREATE INDEX IF NOT EXISTS idx_cards_archived ON cards(isArchived);
   `);
 
-  // Check if cards table is empty, if so, seed sample items
-  const countRow = db.prepare('SELECT COUNT(*) as count FROM cards').get() as { count: number };
-  if (countRow.count === 0) {
-    seedInitialData(db);
+  try {
+    await db.execute(`CREATE INDEX IF NOT EXISTS idx_cards_type ON cards(type);`);
+    await db.execute(`CREATE INDEX IF NOT EXISTS idx_cards_created ON cards(createdAt);`);
+    await db.execute(`CREATE INDEX IF NOT EXISTS idx_cards_favorite ON cards(isFavorite);`);
+  } catch {}
+
+  // Check if cards table is empty, if so, seed initial sample items
+  const countRes = await db.execute('SELECT COUNT(*) as count FROM cards');
+  const count = Number(countRes.rows[0]?.count || 0);
+
+  if (count === 0) {
+    await seedInitialData(db);
   }
+
+  isInitialized = true;
 }
 
-function seedInitialData(db: Database.Database) {
+async function seedInitialData(db: Client) {
   const now = new Date().toISOString();
-  const insertCard = db.prepare(`
-    INSERT INTO cards (
-      id, type, title, content, url, domain, imageUrl, favicon, author, price, currency, rating,
-      colors, tags, ocrText, summary, isFavorite, isArchived, readingProgress, estimatedReadTime, createdAt, updatedAt
-    ) VALUES (
-      @id, @type, @title, @content, @url, @domain, @imageUrl, @favicon, @author, @price, @currency, @rating,
-      @colors, @tags, @ocrText, @summary, @isFavorite, @isArchived, @readingProgress, @estimatedReadTime, @createdAt, @updatedAt
-    )
-  `);
 
   const initialCards: Card[] = [
     {
@@ -166,81 +183,41 @@ function seedInitialData(db: Database.Database) {
       readingProgress: 0,
       createdAt: new Date(Date.now() - 3600000 * 36).toISOString(),
       updatedAt: now,
-    },
-    {
-      id: 'seed-product-1',
-      type: 'product',
-      title: 'Analogue Pocket (Natural Aluminum Edition)',
-      content: 'A multi-video-game system portable handheld with FPGA engineering.',
-      url: 'https://www.analogue.co/pocket',
-      domain: 'analogue.co',
-      imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=80',
-      price: '$219.99',
-      currency: 'USD',
-      tags: ['#hardware', '#design', '#gaming', '#wishlist'],
-      colors: ['#E2E8F0', '#0F172A', '#94A3B8'],
-      isFavorite: false,
-      isArchived: false,
-      readingProgress: 0,
-      createdAt: new Date(Date.now() - 3600000 * 48).toISOString(),
-      updatedAt: now,
-    },
-    {
-      id: 'seed-book-1',
-      type: 'book',
-      title: 'Thinking in Systems: A Primer',
-      author: 'Donella H. Meadows',
-      content: 'Essential reading on feedback loops, leverage points, and non-linear dynamics in complex systems.',
-      url: 'https://www.chelseagreen.com/product/thinking-in-systems/',
-      domain: 'chelseagreen.com',
-      imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
-      rating: 5.0,
-      tags: ['#books', '#systems', '#learning', '#recommended'],
-      colors: ['#475569', '#F1F5F9', '#1E293B'],
-      isFavorite: true,
-      isArchived: false,
-      readingProgress: 100,
-      createdAt: new Date(Date.now() - 3600000 * 72).toISOString(),
-      updatedAt: now,
     }
   ];
 
-  const insertMany = db.transaction((cards: Card[]) => {
-    for (const card of cards) {
-      insertCard.run({
-        id: card.id,
-        type: card.type,
-        title: card.title,
-        content: card.content || null,
-        url: card.url || null,
-        domain: card.domain || null,
-        imageUrl: card.imageUrl || null,
-        favicon: card.favicon || null,
-        author: card.author || null,
-        price: card.price || null,
-        currency: card.currency || null,
-        rating: card.rating || null,
-        colors: card.colors ? JSON.stringify(card.colors) : '[]',
-        tags: JSON.stringify(card.tags || []),
-        ocrText: card.ocrText || null,
-        summary: card.summary || null,
-        isFavorite: card.isFavorite ? 1 : 0,
-        isArchived: card.isArchived ? 1 : 0,
-        readingProgress: card.readingProgress || 0,
-        estimatedReadTime: card.estimatedReadTime || null,
-        createdAt: card.createdAt,
-        updatedAt: card.updatedAt,
-      });
-    }
-  });
-
-  insertMany(initialCards);
-
-  // Seed default Smart Spaces
-  const insertSpace = db.prepare(`
-    INSERT INTO spaces (id, name, emoji, query, iconColor, isPinned, orderIndex, createdAt)
-    VALUES (@id, @name, @emoji, @query, @iconColor, @isPinned, @orderIndex, @createdAt)
-  `);
+  for (const card of initialCards) {
+    await db.execute({
+      sql: `INSERT INTO cards (
+        id, type, title, content, url, domain, imageUrl, favicon, author, price, currency, rating,
+        colors, tags, ocrText, summary, isFavorite, isArchived, readingProgress, estimatedReadTime, createdAt, updatedAt
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [
+        card.id,
+        card.type,
+        card.title,
+        card.content || null,
+        card.url || null,
+        card.domain || null,
+        card.imageUrl || null,
+        card.favicon || null,
+        card.author || null,
+        card.price || null,
+        card.currency || null,
+        card.rating || null,
+        JSON.stringify(card.colors || []),
+        JSON.stringify(card.tags || []),
+        card.ocrText || null,
+        card.summary || null,
+        card.isFavorite ? 1 : 0,
+        card.isArchived ? 1 : 0,
+        card.readingProgress || 0,
+        card.estimatedReadTime || null,
+        card.createdAt,
+        card.updatedAt,
+      ],
+    });
+  }
 
   const initialSpaces: SmartSpace[] = [
     {
@@ -282,41 +259,62 @@ function seedInitialData(db: Database.Database) {
       isPinned: true,
       orderIndex: 3,
       createdAt: now,
-    },
-    {
-      id: 'space-wishlist',
-      name: 'Wishlist & Products',
-      emoji: '🛍️',
-      query: 'type:product',
-      iconColor: '#10B981',
-      isPinned: true,
-      orderIndex: 4,
-      createdAt: now,
     }
   ];
 
   for (const space of initialSpaces) {
-    insertSpace.run({
-      ...space,
-      isPinned: space.isPinned ? 1 : 0,
+    await db.execute({
+      sql: `INSERT INTO spaces (id, name, emoji, query, iconColor, isPinned, orderIndex, createdAt)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      args: [space.id, space.name, space.emoji, space.query, space.iconColor || null, space.isPinned ? 1 : 0, space.orderIndex, space.createdAt],
     });
   }
 }
 
 function parseCardRow(row: any): Card {
+  let colors: string[] = [];
+  let tags: string[] = [];
+
+  try {
+    colors = typeof row.colors === 'string' ? JSON.parse(row.colors) : (row.colors || []);
+  } catch {}
+
+  try {
+    tags = typeof row.tags === 'string' ? JSON.parse(row.tags) : (row.tags || []);
+  } catch {}
+
   return {
-    ...row,
+    id: String(row.id),
+    type: row.type as Card['type'],
+    title: String(row.title),
+    content: row.content ? String(row.content) : undefined,
+    url: row.url ? String(row.url) : undefined,
+    domain: row.domain ? String(row.domain) : undefined,
+    imageUrl: row.imageUrl ? String(row.imageUrl) : undefined,
+    favicon: row.favicon ? String(row.favicon) : undefined,
+    author: row.author ? String(row.author) : undefined,
+    price: row.price ? String(row.price) : undefined,
+    currency: row.currency ? String(row.currency) : undefined,
+    rating: row.rating !== null && row.rating !== undefined ? Number(row.rating) : undefined,
+    colors,
+    tags,
+    ocrText: row.ocrText ? String(row.ocrText) : undefined,
+    summary: row.summary ? String(row.summary) : undefined,
     isFavorite: Boolean(row.isFavorite),
     isArchived: Boolean(row.isArchived),
-    colors: row.colors ? JSON.parse(row.colors) : [],
-    tags: row.tags ? JSON.parse(row.tags) : [],
+    readingProgress: Number(row.readingProgress || 0),
+    estimatedReadTime: row.estimatedReadTime ? Number(row.estimatedReadTime) : undefined,
+    createdAt: String(row.createdAt),
+    updatedAt: String(row.updatedAt),
   };
 }
 
-export function getAllCards(filter?: SearchFilter): Card[] {
+export async function getAllCards(filter?: SearchFilter): Promise<Card[]> {
+  await ensureTablesInitialized();
   const db = getDb();
+
   let query = 'SELECT * FROM cards WHERE 1=1';
-  const params: any[] = [];
+  const args: any[] = [];
 
   if (filter?.archivedOnly) {
     query += ' AND isArchived = 1';
@@ -330,12 +328,12 @@ export function getAllCards(filter?: SearchFilter): Card[] {
 
   if (filter?.type && filter.type !== 'all') {
     query += ' AND type = ?';
-    params.push(filter.type);
+    args.push(filter.type);
   }
 
   if (filter?.domain) {
     query += ' AND domain LIKE ?';
-    params.push(`%${filter.domain}%`);
+    args.push(`%${filter.domain}%`);
   }
 
   if (filter?.query) {
@@ -349,36 +347,38 @@ export function getAllCards(filter?: SearchFilter): Card[] {
       LOWER(ocrText) LIKE ? OR 
       LOWER(domain) LIKE ?
     )`;
-    params.push(q, q, q, q, q, q, q);
+    args.push(q, q, q, q, q, q, q);
   }
 
   if (filter?.tags && filter.tags.length > 0) {
     for (const tag of filter.tags) {
       const cleanTag = tag.startsWith('#') ? tag : `#${tag}`;
       query += ' AND tags LIKE ?';
-      params.push(`%${cleanTag}%`);
+      args.push(`%${cleanTag}%`);
     }
   }
 
   if (filter?.color) {
     query += ' AND (colors LIKE ? OR LOWER(tags) LIKE ?)';
-    params.push(`%${filter.color}%`, `%${filter.color.toLowerCase()}%`);
+    args.push(`%${filter.color}%`, `%${filter.color.toLowerCase()}%`);
   }
 
   query += ' ORDER BY createdAt DESC';
 
-  const rows = db.prepare(query).all(...params);
-  return rows.map(parseCardRow);
+  const res = await db.execute({ sql: query, args });
+  return res.rows.map(parseCardRow);
 }
 
-export function getCardById(id: string): Card | null {
+export async function getCardById(id: string): Promise<Card | null> {
+  await ensureTablesInitialized();
   const db = getDb();
-  const row = db.prepare('SELECT * FROM cards WHERE id = ?').get(id);
-  if (!row) return null;
-  return parseCardRow(row);
+  const res = await db.execute({ sql: 'SELECT * FROM cards WHERE id = ?', args: [id] });
+  if (res.rows.length === 0) return null;
+  return parseCardRow(res.rows[0]);
 }
 
-export function createCard(cardData: Partial<Card> & { type: Card['type']; title: string }): Card {
+export async function createCard(cardData: Partial<Card> & { type: Card['type']; title: string }): Promise<Card> {
+  await ensureTablesInitialized();
   const db = getDb();
   const now = new Date().toISOString();
   const id = cardData.id || `card-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
@@ -408,47 +408,44 @@ export function createCard(cardData: Partial<Card> & { type: Card['type']; title
     updatedAt: now,
   };
 
-  const insert = db.prepare(`
-    INSERT INTO cards (
+  await db.execute({
+    sql: `INSERT INTO cards (
       id, type, title, content, url, domain, imageUrl, favicon, author, price, currency, rating,
       colors, tags, ocrText, summary, isFavorite, isArchived, readingProgress, estimatedReadTime, createdAt, updatedAt
-    ) VALUES (
-      @id, @type, @title, @content, @url, @domain, @imageUrl, @favicon, @author, @price, @currency, @rating,
-      @colors, @tags, @ocrText, @summary, @isFavorite, @isArchived, @readingProgress, @estimatedReadTime, @createdAt, @updatedAt
-    )
-  `);
-
-  insert.run({
-    id: card.id,
-    type: card.type,
-    title: card.title,
-    content: card.content || null,
-    url: card.url || null,
-    domain: card.domain || null,
-    imageUrl: card.imageUrl || null,
-    favicon: card.favicon || null,
-    author: card.author || null,
-    price: card.price || null,
-    currency: card.currency || null,
-    rating: card.rating || null,
-    colors: JSON.stringify(card.colors || []),
-    tags: JSON.stringify(card.tags || []),
-    ocrText: card.ocrText || null,
-    summary: card.summary || null,
-    isFavorite: card.isFavorite ? 1 : 0,
-    isArchived: card.isArchived ? 1 : 0,
-    readingProgress: card.readingProgress,
-    estimatedReadTime: card.estimatedReadTime || null,
-    createdAt: card.createdAt,
-    updatedAt: card.updatedAt,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    args: [
+      card.id,
+      card.type,
+      card.title,
+      card.content || null,
+      card.url || null,
+      card.domain || null,
+      card.imageUrl || null,
+      card.favicon || null,
+      card.author || null,
+      card.price || null,
+      card.currency || null,
+      card.rating || null,
+      JSON.stringify(card.colors || []),
+      JSON.stringify(card.tags || []),
+      card.ocrText || null,
+      card.summary || null,
+      card.isFavorite ? 1 : 0,
+      card.isArchived ? 1 : 0,
+      card.readingProgress,
+      card.estimatedReadTime || null,
+      card.createdAt,
+      card.updatedAt,
+    ],
   });
 
   return card;
 }
 
-export function updateCard(id: string, updates: Partial<Card>): Card | null {
+export async function updateCard(id: string, updates: Partial<Card>): Promise<Card | null> {
+  await ensureTablesInitialized();
   const db = getDb();
-  const existing = getCardById(id);
+  const existing = await getCardById(id);
   if (!existing) return null;
 
   const now = new Date().toISOString();
@@ -458,74 +455,82 @@ export function updateCard(id: string, updates: Partial<Card>): Card | null {
     updatedAt: now,
   };
 
-  const stmt = db.prepare(`
-    UPDATE cards SET
-      type = @type,
-      title = @title,
-      content = @content,
-      url = @url,
-      domain = @domain,
-      imageUrl = @imageUrl,
-      favicon = @favicon,
-      author = @author,
-      price = @price,
-      currency = @currency,
-      rating = @rating,
-      colors = @colors,
-      tags = @tags,
-      ocrText = @ocrText,
-      summary = @summary,
-      isFavorite = @isFavorite,
-      isArchived = @isArchived,
-      readingProgress = @readingProgress,
-      estimatedReadTime = @estimatedReadTime,
-      updatedAt = @updatedAt
-    WHERE id = @id
-  `);
-
-  stmt.run({
-    id: updated.id,
-    type: updated.type,
-    title: updated.title,
-    content: updated.content || null,
-    url: updated.url || null,
-    domain: updated.domain || null,
-    imageUrl: updated.imageUrl || null,
-    favicon: updated.favicon || null,
-    author: updated.author || null,
-    price: updated.price || null,
-    currency: updated.currency || null,
-    rating: updated.rating || null,
-    colors: JSON.stringify(updated.colors || []),
-    tags: JSON.stringify(updated.tags || []),
-    ocrText: updated.ocrText || null,
-    summary: updated.summary || null,
-    isFavorite: updated.isFavorite ? 1 : 0,
-    isArchived: updated.isArchived ? 1 : 0,
-    readingProgress: updated.readingProgress,
-    estimatedReadTime: updated.estimatedReadTime || null,
-    updatedAt: updated.updatedAt,
+  await db.execute({
+    sql: `UPDATE cards SET
+      type = ?,
+      title = ?,
+      content = ?,
+      url = ?,
+      domain = ?,
+      imageUrl = ?,
+      favicon = ?,
+      author = ?,
+      price = ?,
+      currency = ?,
+      rating = ?,
+      colors = ?,
+      tags = ?,
+      ocrText = ?,
+      summary = ?,
+      isFavorite = ?,
+      isArchived = ?,
+      readingProgress = ?,
+      estimatedReadTime = ?,
+      updatedAt = ?
+    WHERE id = ?`,
+    args: [
+      updated.type,
+      updated.title,
+      updated.content || null,
+      updated.url || null,
+      updated.domain || null,
+      updated.imageUrl || null,
+      updated.favicon || null,
+      updated.author || null,
+      updated.price || null,
+      updated.currency || null,
+      updated.rating || null,
+      JSON.stringify(updated.colors || []),
+      JSON.stringify(updated.tags || []),
+      updated.ocrText || null,
+      updated.summary || null,
+      updated.isFavorite ? 1 : 0,
+      updated.isArchived ? 1 : 0,
+      updated.readingProgress,
+      updated.estimatedReadTime || null,
+      updated.updatedAt,
+      id,
+    ],
   });
 
   return updated;
 }
 
-export function deleteCard(id: string): boolean {
+export async function deleteCard(id: string): Promise<boolean> {
+  await ensureTablesInitialized();
   const db = getDb();
-  const info = db.prepare('DELETE FROM cards WHERE id = ?').run(id);
-  return info.changes > 0;
+  const res = await db.execute({ sql: 'DELETE FROM cards WHERE id = ?', args: [id] });
+  return res.rowsAffected > 0;
 }
 
-export function getSmartSpaces(): SmartSpace[] {
+export async function getSmartSpaces(): Promise<SmartSpace[]> {
+  await ensureTablesInitialized();
   const db = getDb();
-  const rows = db.prepare('SELECT * FROM spaces ORDER BY orderIndex ASC, createdAt ASC').all();
-  return rows.map((r: any) => ({
-    ...r,
+  const res = await db.execute('SELECT * FROM spaces ORDER BY orderIndex ASC, createdAt ASC');
+  return res.rows.map((r: any) => ({
+    id: String(r.id),
+    name: String(r.name),
+    emoji: String(r.emoji),
+    query: String(r.query),
+    iconColor: r.iconColor ? String(r.iconColor) : undefined,
     isPinned: Boolean(r.isPinned),
+    orderIndex: Number(r.orderIndex || 0),
+    createdAt: String(r.createdAt),
   }));
 }
 
-export function createSmartSpace(space: Omit<SmartSpace, 'id' | 'createdAt'>): SmartSpace {
+export async function createSmartSpace(space: Omit<SmartSpace, 'id' | 'createdAt'>): Promise<SmartSpace> {
+  await ensureTablesInitialized();
   const db = getDb();
   const id = `space-${Date.now()}`;
   const createdAt = new Date().toISOString();
@@ -535,38 +540,45 @@ export function createSmartSpace(space: Omit<SmartSpace, 'id' | 'createdAt'>): S
     createdAt,
   };
 
-  db.prepare(`
-    INSERT INTO spaces (id, name, emoji, query, iconColor, isPinned, orderIndex, createdAt)
-    VALUES (@id, @name, @emoji, @query, @iconColor, @isPinned, @orderIndex, @createdAt)
-  `).run({
-    ...newSpace,
-    isPinned: newSpace.isPinned ? 1 : 0,
+  await db.execute({
+    sql: `INSERT INTO spaces (id, name, emoji, query, iconColor, isPinned, orderIndex, createdAt)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    args: [
+      newSpace.id,
+      newSpace.name,
+      newSpace.emoji,
+      newSpace.query,
+      newSpace.iconColor || null,
+      newSpace.isPinned ? 1 : 0,
+      newSpace.orderIndex,
+      newSpace.createdAt,
+    ],
   });
 
   return newSpace;
 }
 
-export function deleteSmartSpace(id: string): boolean {
+export async function deleteSmartSpace(id: string): Promise<boolean> {
+  await ensureTablesInitialized();
   const db = getDb();
-  const info = db.prepare('DELETE FROM spaces WHERE id = ?').run(id);
-  return info.changes > 0;
+  const res = await db.execute({ sql: 'DELETE FROM spaces WHERE id = ?', args: [id] });
+  return res.rowsAffected > 0;
 }
 
-export function getSerendipityCards(limit = 6): Card[] {
+export async function getSerendipityCards(limit = 6): Promise<Card[]> {
+  await ensureTablesInitialized();
   const db = getDb();
-  // Get random unarchived cards
-  const rows = db.prepare(`
-    SELECT * FROM cards 
-    WHERE isArchived = 0 
-    ORDER BY RANDOM() 
-    LIMIT ?
-  `).all(limit);
-  return rows.map(parseCardRow);
+  const res = await db.execute({
+    sql: 'SELECT * FROM cards WHERE isArchived = 0 ORDER BY RANDOM() LIMIT ?',
+    args: [limit],
+  });
+  return res.rows.map(parseCardRow);
 }
 
-export function getSettings(): Settings {
+export async function getSettings(): Promise<Settings> {
+  await ensureTablesInitialized();
   const db = getDb();
-  const row = db.prepare("SELECT value FROM settings WHERE key = 'app_config'").get() as { value: string } | undefined;
+  const res = await db.execute("SELECT value FROM settings WHERE key = 'app_config'");
 
   const defaultSettings: Settings = {
     aiProvider: (process.env.DEFAULT_AI_PROVIDER as any) || 'local_heuristic',
@@ -592,12 +604,12 @@ export function getSettings(): Settings {
     cardDensity: 'comfortable',
   };
 
-  if (!row) {
+  if (res.rows.length === 0) {
     return defaultSettings;
   }
 
   try {
-    const parsed = JSON.parse(row.value);
+    const parsed = JSON.parse(String(res.rows[0].value));
     return {
       ...defaultSettings,
       ...parsed,
@@ -609,9 +621,10 @@ export function getSettings(): Settings {
   }
 }
 
-export function saveSettings(settings: Partial<Settings>): Settings {
+export async function saveSettings(settings: Partial<Settings>): Promise<Settings> {
+  await ensureTablesInitialized();
   const db = getDb();
-  const current = getSettings();
+  const current = await getSettings();
   const updated: Settings = {
     ...current,
     ...settings,
@@ -619,11 +632,12 @@ export function saveSettings(settings: Partial<Settings>): Settings {
     selectedModels: { ...current.selectedModels, ...settings.selectedModels },
   };
 
-  db.prepare(`
-    INSERT INTO settings (key, value)
-    VALUES ('app_config', ?)
-    ON CONFLICT(key) DO UPDATE SET value = excluded.value
-  `).run(JSON.stringify(updated));
+  await db.execute({
+    sql: `INSERT INTO settings (key, value)
+          VALUES ('app_config', ?)
+          ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
+    args: [JSON.stringify(updated)],
+  });
 
   return updated;
 }

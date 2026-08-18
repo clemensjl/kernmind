@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const favoritesOnly = searchParams.get('favorites') === 'true';
     const archivedOnly = searchParams.get('archived') === 'true';
 
-    const cards = getAllCards({
+    const cards = await getAllCards({
       query,
       type,
       color,
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Title and type are required.' }, { status: 400 });
     }
 
-    const card = createCard(body);
+    const card = await createCard(body);
     return NextResponse.json({ success: true, card }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

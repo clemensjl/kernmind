@@ -6,10 +6,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '8', 10);
 
-    const randomCards = getSerendipityCards(limit);
+    const randomCards = await getSerendipityCards(limit);
 
     // Also find older memories (e.g. > 1 week old)
-    const allCards = getAllCards();
+    const allCards = await getAllCards();
     const oneWeekAgo = Date.now() - 7 * 86400000;
     const forgottenGems = allCards
       .filter(c => new Date(c.createdAt).getTime() < oneWeekAgo)

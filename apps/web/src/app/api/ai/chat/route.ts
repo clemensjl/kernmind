@@ -9,8 +9,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Query string is required' }, { status: 400 });
     }
 
-    const settings = getSettings();
-    const allCards = getAllCards();
+    const settings = await getSettings();
+    const allCards = await getAllCards();
 
     const response = await askMindChat(query, allCards, history, settings);
 

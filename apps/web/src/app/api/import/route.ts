@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     let successCount = 0;
     for (const card of importedCards) {
       if (card.title || card.content || card.url) {
-        createCard({
+        await createCard({
           type: card.type || 'note',
           title: card.title || 'Imported Item',
           content: card.content || '',

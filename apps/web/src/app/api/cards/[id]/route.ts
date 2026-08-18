@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const card = getCardById(id);
+    const card = await getCardById(id);
     if (!card) {
       return NextResponse.json({ success: false, error: 'Card not found' }, { status: 404 });
     }
@@ -24,7 +24,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const updates = await request.json();
-    const updatedCard = updateCard(id, updates);
+    const updatedCard = await updateCard(id, updates);
     if (!updatedCard) {
       return NextResponse.json({ success: false, error: 'Card not found' }, { status: 404 });
     }
@@ -40,7 +40,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const deleted = deleteCard(id);
+    const deleted = await deleteCard(id);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Card not found' }, { status: 404 });
     }
