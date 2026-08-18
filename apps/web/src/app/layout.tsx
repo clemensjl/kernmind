@@ -25,7 +25,15 @@ export const metadata: Metadata = {
   title: 'KernMind — The Open-Source AI Second Brain',
   description: 'Remember everything, organize nothing. 100% self-hosted & Bring Your Own Key (BYOK). An open-source alternative to MyMind.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/logo.png', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.ico' },
+    ],
+    shortcut: ['/logo.png'],
+    apple: [
+      { url: '/logo.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 };
 
