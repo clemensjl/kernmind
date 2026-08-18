@@ -25,5 +25,5 @@
   ],
   "author": "Clemens J. Lechner",
   "license": "MIT",
-  "packageManager": "pnpm@11.9.0"
+  "packageManager": "pnpm@9.15.5"
 }
