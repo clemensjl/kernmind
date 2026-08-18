@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FDFBF7;
+    --foreground: #1C1917;
+    --card: #FFFFFF;
+    --card-foreground: #1C1917;
+    --primary: #1C1917;
+    --primary-foreground: #FFFFFF;
+    --secondary: #F2EDE4;
+    --secondary-foreground: #44403C;
+    --muted: #E7E0D3;
+    --muted-foreground: #78716C;
+    --accent: #E07A5F;
+    --accent-foreground: #FFFFFF;
+    --border: #EADBCE;
+  }
+
+  .dark {
+    --background: #09090B;
+    --foreground: #FAFAFA;
+    --card: #141417;
+    --card-foreground: #FAFAFA;
+    --primary: #FAFAFA;
+    --primary-foreground: #09090B;
+    --secondary: #202024;
+    --secondary-foreground: #D4D4D8;
+    --muted: #27272A;
+    --muted-foreground: #A1A1AA;
+    --accent: #F43F5E;
+    --accent-foreground: #FFFFFF;
+    --border: #27272A;
+  }
+
+  .theme-sepia {
+    --background: #F4ECD8;
+    --foreground: #433422;
+    --card: #FCF8EE;
+    --card-foreground: #433422;
+    --primary: #5C4033;
+    --primary-foreground: #FCF8EE;
+    --secondary: #EADBC0;
+    --secondary-foreground: #5C4033;
+    --muted: #E2D0B0;
+    --muted-foreground: #8C7B65;
+    --accent: #C86432;
+    --accent-foreground: #FFFFFF;
+    --border: #DFCCA8;
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 113, 108, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 113, 108, 0.4);
+}
+
+/* Masonry Columns */
+.masonry-grid {
+  column-count: 1;
+  column-gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .masonry-grid {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry-grid {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 1440px) {
+  .masonry-grid {
+    column-count: 4;
+  }
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
+}
+
+/* Smooth card transitions */
+.smart-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smart-card:hover {
+  transform: translateY(-2px);
+}

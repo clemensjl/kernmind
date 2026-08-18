@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenMind</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="brand">
+        <div class="logo-box">🧠</div>
+        <span class="brand-name">OpenMind</span>
+      </div>
+      <div class="header-actions">
+        <a href="http://localhost:3000" target="_blank" class="icon-btn" title="Open Mind Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <a href="options.html" target="_blank" class="icon-btn" title="Settings">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Active Tab Quick Save Card -->
+    <div class="active-tab-preview" id="tab-preview">
+      <div class="tab-info">
+        <img id="tab-favicon" class="favicon" src="" alt="">
+        <div class="tab-text">
+          <div id="tab-title" class="tab-title">Loading current page...</div>
+          <div id="tab-url" class="tab-url">...</div>
+        </div>
+      </div>
+      <button id="btn-save-page" class="primary-btn">
+        <span>Save Page</span>
+      </button>
+    </div>
+
+    <!-- Quick Note / Drop Area -->
+    <div class="note-section">
+      <textarea id="quick-note" placeholder="Write a note, quote, or paste content..." rows="3"></textarea>
+      <div class="note-actions">
+        <button id="btn-eyedropper" class="tool-btn" title="Pick Color on Screen">
+          🎨 <span class="tool-label">Eyedropper</span>
+        </button>
+        <button id="btn-save-note" class="secondary-btn">Save Note</button>
+      </div>
+    </div>
+
+    <!-- Status / Toast inside popup -->
+    <div id="popup-status" class="popup-status"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

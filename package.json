@@ -1,0 +1,29 @@
+{
+  "name": "openmind-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Open-Source, Privacy-First AI Second Brain. A 100% self-hosted, BYOK alternative to MyMind.",
+  "scripts": {
+    "dev": "pnpm --filter openmind-web dev",
+    "build": "pnpm --filter openmind-web build",
+    "start": "pnpm --filter openmind-web start",
+    "lint": "pnpm --filter openmind-web lint",
+    "desktop": "pnpm --filter openmind-desktop start",
+    "desktop:build": "pnpm --filter openmind-desktop build"
+  },
+  "keywords": [
+    "mymind-alternative",
+    "second-brain",
+    "open-source",
+    "ai-bookmarks",
+    "smart-spaces",
+    "byok",
+    "self-hosted",
+    "reader-mode",
+    "ocr",
+    "color-palette"
+  ],
+  "author": "Clemens J. Lechner",
+  "license": "MIT",
+  "packageManager": "pnpm@11.9.0"
+}
