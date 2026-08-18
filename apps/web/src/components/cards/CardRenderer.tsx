@@ -20,22 +20,37 @@ export const CardRenderer: React.FC<CardRendererProps> = ({ card, onClick }) => 
     if (onClick) onClick(card);
   };
 
-  switch (card.type) {
-    case 'quote':
-    case 'highlight':
-      return <QuoteCard card={card} onClick={handleClick} />;
-    case 'color':
-      return <ColorCard card={card} onClick={handleClick} />;
-    case 'article':
-      return <ArticleCard card={card} onClick={handleClick} />;
-    case 'image':
-      return <ImageCard card={card} onClick={handleClick} />;
-    case 'product':
-      return <ProductCard card={card} onClick={handleClick} />;
-    case 'book':
-      return <BookCard card={card} onClick={handleClick} />;
-    case 'note':
-    default:
-      return <NoteCard card={card} onClick={handleClick} />;
-  }
+  const renderCardContent = () => {
+    switch (card.type) {
+      case 'quote':
+      case 'highlight':
+        return <QuoteCard card={card} onClick={handleClick} />;
+      case 'color':
+        return <ColorCard card={card} onClick={handleClick} />;
+      case 'article':
+        return <ArticleCard card={card} onClick={handleClick} />;
+      case 'image':
+        return <ImageCard card={card} onClick={handleClick} />;
+      case 'product':
+        return <ProductCard card={card} onClick={handleClick} />;
+      case 'book':
+        return <BookCard card={card} onClick={handleClick} />;
+      case 'note':
+      default:
+        return <NoteCard card={card} onClick={handleClick} />;
+    }
+  };
+
+  return (
+    <div
+      data-card-id={card.id}
+      data-card-type={card.type}
+      data-card-title={card.title}
+      data-card-url={card.url || ''}
+      data-card-favorite={card.isFavorite ? 'true' : 'false'}
+      className="contents"
+    >
+      {renderCardContent()}
+    </div>
+  );
 };

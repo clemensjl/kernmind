@@ -29,6 +29,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { CustomContextMenu } from '@/components/ui/CustomContextMenu';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,6 +40,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20 selection:text-accent">
         {children}
+        <CustomContextMenu />
       </body>
     </html>
   );

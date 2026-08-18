@@ -48,6 +48,32 @@ export default function DashboardPage() {
     fetchCards(filter);
   }, [filter]);
 
+  // Handle global custom context menu events
+  useEffect(() => {
+    const handleOpenCapture = () => setIsQuickCaptureOpen(true);
+    const handleOpenAsk = () => setIsAskMindOpen(true);
+    const handleRefresh = () => fetchCards(filter);
+    const handleInspectCard = (e: any) => {
+      const cardId = e.detail?.cardId;
+      if (cardId) {
+        const found = allCards.find(c => c.id === cardId) || cards.find(c => c.id === cardId);
+        if (found) setSelectedCard(found);
+      }
+    };
+
+    window.addEventListener('open-quick-capture', handleOpenCapture);
+    window.addEventListener('open-ask-mind', handleOpenAsk);
+    window.addEventListener('mind-refreshed', handleRefresh);
+    window.addEventListener('inspect-card-id', handleInspectCard);
+
+    return () => {
+      window.removeEventListener('open-quick-capture', handleOpenCapture);
+      window.removeEventListener('open-ask-mind', handleOpenAsk);
+      window.removeEventListener('mind-refreshed', handleRefresh);
+      window.removeEventListener('inspect-card-id', handleInspectCard);
+    };
+  }, [filter, allCards, cards]);
+
   // Keyboard shortcut 'N' for new note
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
