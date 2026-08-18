@@ -8,23 +8,33 @@ let isInitialized = false;
 
 export function getDb(): Client {
   if (!dbClient) {
-    const tursoUrl = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL;
-    const tursoAuthToken = process.env.TURSO_AUTH_TOKEN;
+    const rawTursoUrl = (process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || '').trim();
+    const rawTursoToken = (process.env.TURSO_AUTH_TOKEN || '').trim();
 
-    if (tursoUrl && (tursoUrl.startsWith('libsql://') || tursoUrl.startsWith('https://') || tursoUrl.startsWith('http://'))) {
+    if (rawTursoUrl && (rawTursoUrl.startsWith('libsql://') || rawTursoUrl.startsWith('https://') || rawTursoUrl.startsWith('http://'))) {
       // Cloud Turso / LibSQL Database (For Vercel / Production)
       dbClient = createClient({
-        url: tursoUrl,
-        authToken: tursoAuthToken,
+        url: rawTursoUrl,
+        authToken: rawTursoToken || undefined,
       });
     } else {
-      // Local SQLite Database file
-      const dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
-      if (typeof window === 'undefined' && !fs.existsSync(dataDir)) {
-        try {
-          fs.mkdirSync(dataDir, { recursive: true });
-        } catch {}
+      // Local or Serverless Ephemeral SQLite file
+      let dataDir: string;
+      if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+        dataDir = '/tmp';
+      } else {
+        dataDir = process.env.DATA_DIR || path.join(process.cwd(), 'data');
+        if (typeof window === 'undefined') {
+          try {
+            if (!fs.existsSync(dataDir)) {
+              fs.mkdirSync(dataDir, { recursive: true });
+            }
+          } catch (e) {
+            dataDir = '/tmp';
+          }
+        }
       }
+
       const dbFilePath = path.join(dataDir, 'kernmind.db');
       dbClient = createClient({
         url: `file:${dbFilePath.replace(/\\/g, '/')}`,
