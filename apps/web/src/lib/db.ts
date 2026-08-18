@@ -233,7 +233,7 @@ async function seedInitialData(db: Client) {
     {
       id: 'space-articles',
       name: 'Deep Reading',
-      emoji: '📖',
+      emoji: 'BookOpen',
       query: 'type:article',
       iconColor: '#3B82F6',
       isPinned: true,
@@ -243,7 +243,7 @@ async function seedInitialData(db: Client) {
     {
       id: 'space-design',
       name: 'Design & Visuals',
-      emoji: '🎨',
+      emoji: 'Palette',
       query: 'tag:#design',
       iconColor: '#EC4899',
       isPinned: true,
@@ -253,7 +253,7 @@ async function seedInitialData(db: Client) {
     {
       id: 'space-ai',
       name: 'AI & Intelligence',
-      emoji: '🧠',
+      emoji: 'Cpu',
       query: 'tag:#ai',
       iconColor: '#8B5CF6',
       isPinned: true,
@@ -263,7 +263,7 @@ async function seedInitialData(db: Client) {
     {
       id: 'space-quotes',
       name: 'Wisdom & Quotes',
-      emoji: '💬',
+      emoji: 'Quote',
       query: 'type:quote',
       iconColor: '#F59E0B',
       isPinned: true,

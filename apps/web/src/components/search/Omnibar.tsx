@@ -2,7 +2,20 @@
 
 import React, { useRef, useEffect } from 'react';
 import { CardType, SearchFilter } from '@/lib/types';
-import { Search, X, Filter, Sparkles, Heart, Archive } from 'lucide-react';
+import {
+  Search,
+  X,
+  Sparkles,
+  Heart,
+  Newspaper,
+  FileText,
+  Quote,
+  Palette,
+  Image as ImageIcon,
+  ShoppingBag,
+  BookOpen,
+  LucideIcon
+} from 'lucide-react';
 
 interface OmnibarProps {
   filter: SearchFilter;
@@ -10,15 +23,15 @@ interface OmnibarProps {
   totalCount: number;
 }
 
-const TYPE_PILLS: { label: string; type: CardType | 'all'; emoji: string }[] = [
-  { label: 'All', type: 'all', emoji: '✨' },
-  { label: 'Articles', type: 'article', emoji: '📰' },
-  { label: 'Notes', type: 'note', emoji: '📝' },
-  { label: 'Quotes', type: 'quote', emoji: '💬' },
-  { label: 'Colors', type: 'color', emoji: '🎨' },
-  { label: 'Images', type: 'image', emoji: '🖼️' },
-  { label: 'Products', type: 'product', emoji: '🛍️' },
-  { label: 'Books', type: 'book', emoji: '📚' },
+const TYPE_PILLS: { label: string; type: CardType | 'all'; Icon: LucideIcon }[] = [
+  { label: 'All', type: 'all', Icon: Sparkles },
+  { label: 'Articles', type: 'article', Icon: Newspaper },
+  { label: 'Notes', type: 'note', Icon: FileText },
+  { label: 'Quotes', type: 'quote', Icon: Quote },
+  { label: 'Colors', type: 'color', Icon: Palette },
+  { label: 'Images', type: 'image', Icon: ImageIcon },
+  { label: 'Products', type: 'product', Icon: ShoppingBag },
+  { label: 'Books', type: 'book', Icon: BookOpen },
 ];
 
 const COLOR_SWATCHES = [
@@ -129,6 +142,7 @@ export const Omnibar: React.FC<OmnibarProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
           {TYPE_PILLS.map((pill) => {
             const isSelected = (filter.type || 'all') === pill.type;
+            const PillIcon = pill.Icon;
             return (
               <button
                 key={pill.type}
@@ -139,7 +153,7 @@ export const Omnibar: React.FC<OmnibarProps> = ({
                     : 'bg-secondary/70 hover:bg-secondary text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <span>{pill.emoji}</span>
+                <PillIcon className="w-3.5 h-3.5 shrink-0" />
                 <span>{pill.label}</span>
               </button>
             );

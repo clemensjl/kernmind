@@ -90,7 +90,7 @@ function showToast(message) {
   const toast = document.createElement('div');
   toast.id = 'kernmind-toast';
   toast.innerHTML = `
-    <div class="kernmind-toast-icon">🧠</div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E07A5F" stroke-width="2.5"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></svg>
     <span>${message}</span>
   `;
   document.body.appendChild(toast);

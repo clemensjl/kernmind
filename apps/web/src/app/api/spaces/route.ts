@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     const space = await createSmartSpace({
       name: body.name,
-      emoji: body.emoji || '✨',
+      emoji: body.emoji || 'Layers',
       query: body.query,
       iconColor: body.iconColor,
       isPinned: body.isPinned !== false,

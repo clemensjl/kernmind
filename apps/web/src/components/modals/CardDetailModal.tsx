@@ -215,15 +215,82 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
           {/* Content / Notes */}
           <div>
-            <label className="text-xs font-medium text-muted-foreground mb-1 block">
-              {card.type === 'quote' ? 'Quote Text' : 'Content / Notes'}
-            </label>
-            <textarea
-              rows={6}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full p-3 text-sm bg-secondary/40 focus:bg-card border border-transparent focus:border-border rounded-xl outline-none transition-all leading-relaxed"
-            />
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-medium text-muted-foreground block">
+                {card.type === 'quote' ? 'Quote Text' : 'Content / Notes'}
+              </label>
+              {(content.includes('- [ ]') || content.includes('- [x]')) && (
+                <span className="text-[11px] text-accent font-medium">
+                  Checklist detected
+                </span>
+              )}
+            </div>
+
+            {(content.includes('- [ ]') || content.includes('- [x]')) ? (
+              <div className="space-y-2 mb-3 p-3.5 rounded-xl bg-secondary/30 border border-border/50">
+                <div className="space-y-1.5">
+                  {content.split('\n').map((line, idx) => {
+                    const isChecked = line.startsWith('- [x]');
+                    const isUnchecked = line.startsWith('- [ ]');
+                    if (isChecked || isUnchecked) {
+                      const itemText = line.replace(/^- \[( |x)\]\s*/, '');
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => {
+                            const lines = content.split('\n');
+                            lines[idx] = isChecked ? line.replace('- [x]', '- [ ]') : line.replace('- [ ]', '- [x]');
+                            setContent(lines.join('\n'));
+                          }}
+                          className="flex items-center gap-2.5 py-1 px-2 rounded-lg hover:bg-secondary/60 cursor-pointer select-none transition-colors"
+                        >
+                          <button
+                            type="button"
+                            className={`w-4 h-4 rounded-md flex items-center justify-center border transition-all ${
+                              isChecked
+                                ? 'bg-emerald-600 border-emerald-600 text-white'
+                                : 'border-muted-foreground/50 bg-card'
+                            }`}
+                          >
+                            {isChecked && <span className="text-xs font-bold leading-none">✓</span>}
+                          </button>
+                          <span
+                            className={`text-sm ${
+                              isChecked
+                                ? 'text-muted-foreground line-through'
+                                : 'text-foreground'
+                            }`}
+                          >
+                            {itemText}
+                          </span>
+                        </div>
+                      );
+                    }
+                    return (
+                      <p key={idx} className="text-sm text-foreground/80 px-2 py-0.5">
+                        {line}
+                      </p>
+                    );
+                  })}
+                </div>
+                <details className="pt-2 border-t border-border/40 text-xs">
+                  <summary className="text-muted-foreground cursor-pointer hover:text-foreground">Edit raw markdown checklist</summary>
+                  <textarea
+                    rows={4}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full p-2.5 mt-2 text-xs font-mono bg-card border border-border rounded-lg outline-none"
+                  />
+                </details>
+              </div>
+            ) : (
+              <textarea
+                rows={6}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-full p-3 text-sm bg-secondary/40 focus:bg-card border border-transparent focus:border-border rounded-xl outline-none transition-all leading-relaxed"
+              />
+            )}
           </div>
 
           {/* OCR Extracted Text if any */}

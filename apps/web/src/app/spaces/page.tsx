@@ -7,7 +7,65 @@ import { CardRenderer } from '@/components/cards/CardRenderer';
 import { CardDetailModal } from '@/components/modals/CardDetailModal';
 import { QuickCaptureModal } from '@/components/modals/QuickCaptureModal';
 import { AskMindModal } from '@/components/modals/AskMindModal';
-import { Layers, Plus, Trash2, Sparkles, Filter, ArrowRight } from 'lucide-react';
+import {
+  Layers,
+  Plus,
+  Trash2,
+  Sparkles,
+  BookOpen,
+  Palette,
+  Quote,
+  Compass,
+  Code,
+  Image as ImageIcon,
+  ShoppingBag,
+  Lightbulb,
+  Bookmark,
+  Terminal,
+  Heart,
+  Folder,
+  Feather,
+  Flame,
+  Globe,
+  Cpu,
+  LucideIcon
+} from 'lucide-react';
+
+const SPACE_ICON_MAP: Record<string, LucideIcon> = {
+  'Layers': Layers,
+  'BookOpen': BookOpen,
+  'Palette': Palette,
+  'Sparkles': Sparkles,
+  'Quote': Quote,
+  'Compass': Compass,
+  'Code': Code,
+  'Image': ImageIcon,
+  'ShoppingBag': ShoppingBag,
+  'Lightbulb': Lightbulb,
+  'Bookmark': Bookmark,
+  'Terminal': Terminal,
+  'Heart': Heart,
+  'Folder': Folder,
+  'Feather': Feather,
+  'Flame': Flame,
+  'Globe': Globe,
+  'Cpu': Cpu,
+};
+
+const AVAILABLE_ICONS = Object.keys(SPACE_ICON_MAP);
+
+function getSpaceIcon(iconNameOrEmoji: string): LucideIcon {
+  if (SPACE_ICON_MAP[iconNameOrEmoji]) {
+    return SPACE_ICON_MAP[iconNameOrEmoji];
+  }
+  // Fallback heuristics for legacy seed data
+  if (iconNameOrEmoji === '📖' || iconNameOrEmoji.includes('book')) return BookOpen;
+  if (iconNameOrEmoji === '🎨' || iconNameOrEmoji.includes('art') || iconNameOrEmoji.includes('color')) return Palette;
+  if (iconNameOrEmoji === '🧠' || iconNameOrEmoji.includes('mind') || iconNameOrEmoji.includes('ai')) return Cpu;
+  if (iconNameOrEmoji === '💬' || iconNameOrEmoji.includes('quote')) return Quote;
+  if (iconNameOrEmoji === '💡' || iconNameOrEmoji.includes('idea')) return Lightbulb;
+  return Layers;
+}
 
 export default function SpacesPage() {
   const [spaces, setSpaces] = useState<SmartSpace[]>([]);
@@ -16,7 +74,7 @@ export default function SpacesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [newName, setNewName] = useState('');
-  const [newEmoji, setNewEmoji] = useState('💡');
+  const [selectedIcon, setSelectedIcon] = useState('Lightbulb');
   const [newQuery, setNewQuery] = useState('');
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
@@ -87,7 +145,7 @@ export default function SpacesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: newName.trim(),
-          emoji: newEmoji.trim() || '✨',
+          emoji: selectedIcon,
           query: newQuery.trim(),
         }),
       });
@@ -97,6 +155,7 @@ export default function SpacesPage() {
         setActiveSpace(data.space);
         setNewName('');
         setNewQuery('');
+        setSelectedIcon('Lightbulb');
         setIsCreating(false);
       }
     } catch (err) {
@@ -153,27 +212,43 @@ export default function SpacesPage() {
             className="p-5 rounded-2xl bg-card border border-border/80 shadow-md max-w-xl space-y-4 animate-in fade-in duration-200"
           >
             <h3 className="text-sm font-semibold text-foreground">Create Smart Space</h3>
-            <div className="grid grid-cols-4 gap-3">
-              <div className="col-span-1">
-                <label className="text-xs text-muted-foreground block mb-1">Emoji</label>
-                <input
-                  type="text"
-                  value={newEmoji}
-                  onChange={(e) => setNewEmoji(e.target.value)}
-                  className="w-full text-center p-2 text-lg bg-secondary/50 rounded-xl outline-none"
-                />
+            
+            {/* Symbol / Icon Selector */}
+            <div>
+              <label className="text-xs text-muted-foreground block mb-2">Select Symbol</label>
+              <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-secondary/40 border border-border/50">
+                {AVAILABLE_ICONS.map((iconKey) => {
+                  const IconComp = SPACE_ICON_MAP[iconKey];
+                  const isSelected = selectedIcon === iconKey;
+                  return (
+                    <button
+                      key={iconKey}
+                      type="button"
+                      onClick={() => setSelectedIcon(iconKey)}
+                      title={iconKey}
+                      className={`p-2 rounded-lg transition-all ${
+                        isSelected
+                          ? 'bg-foreground text-background shadow-xs scale-110'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                      }`}
+                    >
+                      <IconComp className="w-4 h-4" />
+                    </button>
+                  );
+                })}
               </div>
-              <div className="col-span-3">
-                <label className="text-xs text-muted-foreground block mb-1">Space Name</label>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="e.g. Architecture Studio"
-                  required
-                  className="w-full p-2 text-sm bg-secondary/50 rounded-xl outline-none"
-                />
-              </div>
+            </div>
+
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1">Space Name</label>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="e.g. Architecture Studio"
+                required
+                className="w-full p-2.5 text-sm bg-secondary/50 rounded-xl outline-none"
+              />
             </div>
 
             <div>
@@ -186,7 +261,7 @@ export default function SpacesPage() {
                 onChange={(e) => setNewQuery(e.target.value)}
                 placeholder="tag:#architecture or type:image"
                 required
-                className="w-full p-2 text-sm font-mono bg-secondary/50 rounded-xl outline-none"
+                className="w-full p-2.5 text-sm font-mono bg-secondary/50 rounded-xl outline-none"
               />
             </div>
 
@@ -212,6 +287,7 @@ export default function SpacesPage() {
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
           {spaces.map((space) => {
             const isActive = activeSpace?.id === space.id;
+            const SpaceIcon = getSpaceIcon(space.emoji);
             return (
               <div
                 key={space.id}
@@ -222,7 +298,7 @@ export default function SpacesPage() {
                     : 'bg-card text-muted-foreground hover:text-foreground border-border/60 hover:border-border'
                 }`}
               >
-                <span>{space.emoji}</span>
+                <SpaceIcon className="w-3.5 h-3.5 shrink-0" />
                 <span>{space.name}</span>
                 <span className="text-[10px] opacity-60 font-mono">({space.query})</span>
                 <button
