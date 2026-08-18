@@ -39,8 +39,8 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/85 border-b border-[#EADBCE]/60">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#1C1917] text-white flex items-center justify-center shadow-xs">
-              <Brain className="w-4 h-4 text-[#E07A5F]" />
+            <div className="w-8 h-8 rounded-xl overflow-hidden shadow-xs flex items-center justify-center bg-white border border-[#EADBCE]">
+              <img src="/logo.png" alt="KernMind" className="w-full h-full object-contain" />
             </div>
             <span className="font-bold text-lg tracking-tight">KernMind</span>
           </Link>

@@ -38,8 +38,8 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-xs transition-transform group-hover:scale-105">
-            <Brain className="w-4 h-4 text-accent" />
+          <div className="w-8 h-8 rounded-xl overflow-hidden shadow-xs transition-transform group-hover:scale-105 flex items-center justify-center bg-card border border-border/60">
+            <img src="/logo.png" alt="KernMind" className="w-full h-full object-contain" />
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-base tracking-tight text-foreground leading-none">
