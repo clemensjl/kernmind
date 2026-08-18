@@ -4,7 +4,7 @@ export async function GET() {
   return NextResponse.json({
     status: 'ok',
     version: '1.0.0',
-    app: 'OpenMind',
+    app: 'KernMind',
     timestamp: new Date().toISOString(),
   });
 }

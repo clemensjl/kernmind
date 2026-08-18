@@ -43,7 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-base tracking-tight text-foreground leading-none">
-              OpenMind
+              KernMind
             </span>
             <span className="text-[10px] text-muted-foreground font-mono leading-none mt-0.5">
               byok • local-first
@@ -95,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* GitHub Repo */}
           <a
-            href="https://github.com/clemensjl/openmind"
+            href="https://github.com/clemensjl/kernmind"
             target="_blank"
             rel="noreferrer"
             className="p-2 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"

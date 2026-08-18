@@ -4,7 +4,7 @@ const path = require('path');
 let mainWindow = null;
 let captureWindow = null;
 let tray = null;
-const SERVER_URL = process.env.OPENMIND_URL || 'http://localhost:3000';
+const SERVER_URL = process.env.KERNMIND_URL || 'http://localhost:3000';
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -12,7 +12,7 @@ function createMainWindow() {
     height: 860,
     minWidth: 800,
     minHeight: 600,
-    title: 'OpenMind — AI Second Brain',
+    title: 'KernMind — AI Second Brain',
     backgroundColor: '#FDFBF7',
     webPreferences: {
       nodeIntegration: false,
@@ -79,7 +79,7 @@ function createTray() {
     },
     { type: 'separator' },
     {
-      label: 'Quit OpenMind',
+      label: 'Quit KernMind',
       click: () => {
         app.isQuitting = true;
         app.quit();
@@ -87,7 +87,7 @@ function createTray() {
     },
   ]);
 
-  tray.setToolTip('OpenMind — AI Second Brain');
+  tray.setToolTip('KernMind — AI Second Brain');
   tray.setContextMenu(contextMenu);
 
   tray.on('double-click', () => {

@@ -1,4 +1,4 @@
-#openmind-highlight-btn {
+#kernmind-highlight-btn {
   position: absolute;
   z-index: 2147483647;
   display: none;
@@ -17,12 +17,12 @@
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-#openmind-highlight-btn:hover {
+#kernmind-highlight-btn:hover {
   background-color: #2E2A27;
   transform: scale(1.05);
 }
 
-#openmind-toast {
+#kernmind-toast {
   position: fixed;
   bottom: 24px;
   right: 24px;
@@ -38,14 +38,14 @@
   font-weight: 500;
   border-radius: 16px;
   box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.3);
-  animation: openmind-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: kernmind-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.openmind-toast-hide {
-  animation: openmind-slide-out 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+.kernmind-toast-hide {
+  animation: kernmind-slide-out 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
 }
 
-@keyframes openmind-slide-in {
+@keyframes kernmind-slide-in {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -56,7 +56,7 @@
   }
 }
 
-@keyframes openmind-slide-out {
+@keyframes kernmind-slide-out {
   from {
     opacity: 1;
     transform: translateY(0);

@@ -7,26 +7,26 @@ async function getApiUrl() {
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    id: 'openmind-save-page',
-    title: 'Save Page to OpenMind',
+    id: 'kernmind-save-page',
+    title: 'Save Page to KernMind',
     contexts: ['page'],
   });
 
   chrome.contextMenus.create({
-    id: 'openmind-save-selection',
-    title: 'Save Quote "%s" to OpenMind',
+    id: 'kernmind-save-selection',
+    title: 'Save Quote "%s" to KernMind',
     contexts: ['selection'],
   });
 
   chrome.contextMenus.create({
-    id: 'openmind-save-image',
-    title: 'Save Image to OpenMind',
+    id: 'kernmind-save-image',
+    title: 'Save Image to KernMind',
     contexts: ['image'],
   });
 
   chrome.contextMenus.create({
-    id: 'openmind-save-link',
-    title: 'Save Link to OpenMind',
+    id: 'kernmind-save-link',
+    title: 'Save Link to KernMind',
     contexts: ['link'],
   });
 });
@@ -35,27 +35,27 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const apiUrl = await getApiUrl();
   let payload = {};
 
-  if (info.menuItemId === 'openmind-save-page') {
+  if (info.menuItemId === 'kernmind-save-page') {
     payload = {
       url: tab?.url,
       title: tab?.title,
       type: 'article',
     };
-  } else if (info.menuItemId === 'openmind-save-selection') {
+  } else if (info.menuItemId === 'kernmind-save-selection') {
     payload = {
       type: 'quote',
       text: info.selectionText,
       url: tab?.url,
       title: tab?.title ? `Quote from ${tab.title}` : 'Saved Quote',
     };
-  } else if (info.menuItemId === 'openmind-save-image') {
+  } else if (info.menuItemId === 'kernmind-save-image') {
     payload = {
       type: 'image',
       imageUrl: info.srcUrl,
       url: tab?.url,
       title: tab?.title ? `Image from ${tab.title}` : 'Saved Image',
     };
-  } else if (info.menuItemId === 'openmind-save-link') {
+  } else if (info.menuItemId === 'kernmind-save-link') {
     payload = {
       url: info.linkUrl,
       type: 'article',
@@ -82,7 +82,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       }
     }
   } catch (err) {
-    console.error('OpenMind capture error:', err);
+    console.error('KernMind capture error:', err);
     chrome.action.setBadgeText({ text: '!' });
     chrome.action.setBadgeBackgroundColor({ color: '#EF4444' });
     setTimeout(() => chrome.action.setBadgeText({ text: '' }), 3000);

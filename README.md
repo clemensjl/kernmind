@@ -1,10 +1,10 @@
-# 🧠 OpenMind
+# 🧠 KernMind
 
 > **The Open-Source, Privacy-First AI Second Brain.**  
 > *Remember everything, organize nothing. 100% self-hosted & Bring Your Own Key (BYOK).*  
 > A complete, modern, open-source alternative to [mymind.com](https://mymind.com).
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fclemensjl%2Fopenmind&root-directory=apps%2Fweb&env=TURSO_DATABASE_URL,TURSO_AUTH_TOKEN&envDescription=Create%20a%20free%20cloud%20database%20at%20turso.tech%20and%20paste%20the%20URL%20and%20Auth%20Token)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fclemensjl%2Fkernmind&root-directory=apps%2Fweb&env=TURSO_DATABASE_URL,TURSO_AUTH_TOKEN&envDescription=Create%20a%20free%20cloud%20database%20at%20turso.tech%20and%20paste%20the%20URL%20and%20Auth%20Token)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node: 22+](https://img.shields.io/badge/Node-22%2B-green.svg)](https://nodejs.org)
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.5-black.svg)](https://nextjs.org)
@@ -28,37 +28,53 @@
 
 ---
 
+## 📊 Feature Comparison (KernMind vs. mymind.com)
+
+| Feature | mymind.com | KernMind (This Project) |
+| :--- | :--- | :--- |
+| **Annual Price** | $144 / year ($12/mo) | **$0 / Free Forever (MIT)** |
+| **Source Code** | Proprietary / Closed | **100% Open Source** |
+| **Data Ownership** | Cloud vendor lock-in | **100% Local SQLite / Private Cloud Database** |
+| **AI Models** | Closed blackbox | **BYOK (Gemini, GPT-4o, Claude, Groq, Ollama)** |
+| **Smart Card Types** | Notes, Images, Quotes, Colors | **All 10 Card Types + OCR + Harmonies** |
+| **Reading Mode** | Mastermind tier only | **Built-in Distraction-Free Reader** |
+| **Color Engine** | Basic color swatch | **Dominant Palette, HSL, Complementary & Analogous** |
+| **Data Export** | Restricted | **1-Click JSON & Markdown ZIP with YAML** |
+| **Offline Privacy** | Requires cloud | **100% Offline with Ollama or Heuristics** |
+
+---
+
 ## 🚀 1-Click Cloud Deployment (Vercel + Turso)
 
-You can host OpenMind permanently on Vercel for free with a persistent cloud database:
+You can host KernMind permanently on Vercel for free with a persistent cloud database:
 
 ### Step 1: Create a Free Turso Database (30 seconds)
 1. Go to **[turso.tech](https://turso.tech)** and sign up (Free tier includes 9GB storage & 500 databases).
 2. Create a new database:
-   - Via Web Dashboard: Click **Create Database** -> Name it `openmind`.
-   - Or via CLI: `turso db create openmind`
-3. Copy your database connection URL (e.g. `libsql://openmind-[username].turso.io`) and create an Auth Token (`turso db tokens create openmind` or from Web Dashboard).
+   - Via Web Dashboard: Click **Create Database** -> Name it `kernmind`.
+   - Or via CLI: `turso db create kernmind`
+3. Copy your database connection URL (e.g. `libsql://kernmind-[username].turso.io`) and create an Auth Token (`turso db tokens create kernmind` or from Web Dashboard).
 
 ### Step 2: Deploy to Vercel
 1. Click the button below:  
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fclemensjl%2Fopenmind&root-directory=apps%2Fweb&env=TURSO_DATABASE_URL,TURSO_AUTH_TOKEN&envDescription=Create%20a%20free%20cloud%20database%20at%20turso.tech%20and%20paste%20the%20URL%20and%20Auth%20Token)
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fclemensjl%2Fkernmind&root-directory=apps%2Fweb&env=TURSO_DATABASE_URL,TURSO_AUTH_TOKEN&envDescription=Create%20a%20free%20cloud%20database%20at%20turso.tech%20and%20paste%20the%20URL%20and%20Auth%20Token)
 2. In Vercel Project Settings:
    - **Root Directory**: `apps/web`
    - **Environment Variables**:
-     - `TURSO_DATABASE_URL`: `libsql://your-db.turso.io`
+     - `TURSO_DATABASE_URL`: `libsql://kernmind-[username].turso.io`
      - `TURSO_AUTH_TOKEN`: `your-turso-auth-token`
-3. Click **Deploy** — your personal OpenMind second brain is now live at `https://your-app.vercel.app`!
+3. Click **Deploy** — your personal KernMind second brain is now live at `https://your-app.vercel.app`!
 
 ---
 
 ## 💻 Local Development (Zero Config)
 
-When running locally without environment variables, OpenMind automatically stores data in `./data/openmind.db`.
+When running locally without environment variables, KernMind automatically stores data in `./data/kernmind.db`.
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/clemensjl/openmind.git
-cd openmind
+git clone https://github.com/clemensjl/kernmind.git
+cd kernmind
 
 # 2. Install dependencies
 pnpm install

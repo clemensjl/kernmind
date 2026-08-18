@@ -340,7 +340,7 @@ export default function SettingsPage() {
             {/* Import Area */}
             <div className="pt-2">
               <label className="text-xs font-semibold text-foreground block mb-2">
-                Import from MyMind, Pocket, or OpenMind JSON
+                Import from MyMind, Pocket, or KernMind JSON
               </label>
               <div className="flex items-center gap-3">
                 <label className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-card border border-border text-xs font-medium cursor-pointer hover:border-foreground text-foreground transition-colors">

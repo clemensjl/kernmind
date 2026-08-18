@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     let importedCards: Partial<Card>[] = [];
 
-    // Check if standard OpenMind export
+    // Check if standard KernMind export
     if (Array.isArray(body.cards)) {
       importedCards = body.cards;
     } else if (Array.isArray(body)) {

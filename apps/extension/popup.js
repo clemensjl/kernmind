@@ -1,4 +1,4 @@
-// OpenMind Popup Logic
+// KernMind Popup Logic
 
 const DEFAULT_API_URL = 'http://localhost:3000';
 
@@ -61,7 +61,7 @@ document.getElementById('btn-save-page').addEventListener('click', async () => {
   } catch (err) {
     btn.disabled = false;
     btn.textContent = 'Save Page';
-    showStatus('Could not reach OpenMind server', true);
+    showStatus('Could not reach KernMind server', true);
   }
 });
 

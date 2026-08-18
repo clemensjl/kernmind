@@ -13,7 +13,7 @@ COPY --from=dependencies /app/apps/web/node_modules ./apps/web/node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-RUN pnpm --filter openmind-web build
+RUN pnpm --filter kernmind-web build
 
 FROM node:22-alpine AS runner
 WORKDIR /app

@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'OpenMind — The Open-Source AI Second Brain',
+  title: 'KernMind — The Open-Source AI Second Brain',
   description: 'Remember everything, organize nothing. 100% self-hosted & Bring Your Own Key (BYOK). An open-source alternative to MyMind.',
   icons: {
     icon: '/favicon.ico',

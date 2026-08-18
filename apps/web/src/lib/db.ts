@@ -25,7 +25,7 @@ export function getDb(): Client {
           fs.mkdirSync(dataDir, { recursive: true });
         } catch {}
       }
-      const dbFilePath = path.join(dataDir, 'openmind.db');
+      const dbFilePath = path.join(dataDir, 'kernmind.db');
       dbClient = createClient({
         url: `file:${dbFilePath.replace(/\\/g, '/')}`,
       });
@@ -142,10 +142,10 @@ async function seedInitialData(db: Client) {
       title: 'The Architecture of Autonomous Second Brains',
       summary: 'Exploring how local-first vector embeddings and associative AI memory replace traditional hierarchical note-taking structures.',
       content: `# The Architecture of Autonomous Second Brains\n\nFor decades, digital knowledge management forced humans to think like filing cabinets. We created folders inside folders, tagged with rigid taxonomies, and spent more time organizing than creating.\n\n### The Associative Revolution\nThe human mind doesn't store memories in hierarchical file paths. A scent of coffee might evoke a morning in Lisbon, which reminds you of a typography layout on a café menu, which inspires a new UI component.\n\n> *“We need tools that mimic the associative fluidity of biological cognition.”*\n\nBy leveraging vector embeddings and multimodal vision models locally, we can construct personal memory palaces that index text, colors, shapes, and feelings automatically.`,
-      url: 'https://openmind.app/blog/autonomous-second-brains',
-      domain: 'openmind.app',
+      url: 'https://kernmind.app/blog/autonomous-second-brains',
+      domain: 'kernmind.app',
       imageUrl: 'https://images.unsplash.com/photo-1507842229451-7f01be7fe802?w=800&auto=format&fit=crop&q=80',
-      favicon: 'https://openmind.app/favicon.ico',
+      favicon: 'https://kernmind.app/favicon.ico',
       author: 'Clemens Lechner',
       estimatedReadTime: 4,
       readingProgress: 45,
@@ -174,9 +174,9 @@ async function seedInitialData(db: Client) {
     {
       id: 'seed-note-1',
       type: 'note',
-      title: 'Product Principles for OpenMind',
+      title: 'Product Principles for KernMind',
       content: '- [x] 100% Data Privacy (All SQLite & Vector stored locally)\n- [x] Zero-effort organization (AI auto-tags and categorizes)\n- [x] Bring Your Own Key (OpenAI, Gemini, Claude, Groq, Ollama)\n- [x] Beautiful distraction-free reader mode\n- [ ] Mobile PWA companion integration',
-      tags: ['#openmind', '#principles', '#roadmap', '#product'],
+      tags: ['#kernmind', '#principles', '#roadmap', '#product'],
       colors: ['#1E293B', '#38BDF8'],
       isFavorite: true,
       isArchived: false,

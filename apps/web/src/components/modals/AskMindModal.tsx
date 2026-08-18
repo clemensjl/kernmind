@@ -21,7 +21,7 @@ export const AskMindModal: React.FC<AskMindModalProps> = ({
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'I am your OpenMind AI companion. Ask me anything across your saved articles, quotes, color palettes, and notes.',
+      content: 'I am your KernMind AI companion. Ask me anything across your saved articles, quotes, color palettes, and notes.',
       createdAt: new Date().toISOString(),
     },
   ]);

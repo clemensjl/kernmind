@@ -1,4 +1,4 @@
-// OpenMind Content Script
+// KernMind Content Script
 
 let floatingButton = null;
 
@@ -6,7 +6,7 @@ function createFloatingButton() {
   if (floatingButton) return floatingButton;
 
   floatingButton = document.createElement('div');
-  floatingButton.id = 'openmind-highlight-btn';
+  floatingButton.id = 'kernmind-highlight-btn';
   floatingButton.innerHTML = `
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H4c-1.25 0-2 .75-2 2v6c0 7 4 8 7 8Z"/>
@@ -41,7 +41,7 @@ function createFloatingButton() {
         showToast('Quote saved to your Mind!');
       }
     } catch (err) {
-      showToast('Could not reach OpenMind server');
+      showToast('Could not reach KernMind server');
     }
   });
 
@@ -77,26 +77,26 @@ document.addEventListener('mouseup', (e) => {
 });
 
 document.addEventListener('mousedown', (e) => {
-  if (e.target && !e.target.closest('#openmind-highlight-btn')) {
+  if (e.target && !e.target.closest('#kernmind-highlight-btn')) {
     hideFloatingButton();
   }
 });
 
 // Toast notification
 function showToast(message) {
-  const existing = document.getElementById('openmind-toast');
+  const existing = document.getElementById('kernmind-toast');
   if (existing) existing.remove();
 
   const toast = document.createElement('div');
-  toast.id = 'openmind-toast';
+  toast.id = 'kernmind-toast';
   toast.innerHTML = `
-    <div class="openmind-toast-icon">🧠</div>
+    <div class="kernmind-toast-icon">🧠</div>
     <span>${message}</span>
   `;
   document.body.appendChild(toast);
 
   setTimeout(() => {
-    toast.classList.add('openmind-toast-hide');
+    toast.classList.add('kernmind-toast-hide');
     setTimeout(() => toast.remove(), 400);
   }, 2400);
 }

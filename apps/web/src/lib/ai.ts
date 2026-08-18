@@ -18,7 +18,7 @@ export async function analyzeCardWithAI(
     return runHeuristicTagging(card);
   }
 
-  const prompt = `You are OpenMind AI, an intelligent personal knowledge assistant inspired by mymind.
+  const prompt = `You are KernMind AI, an intelligent personal knowledge assistant inspired by mymind.
 Analyze the following saved content and return a JSON object with:
 1. "tags": Array of 3-7 lowercase hashtags starting with # (e.g. ["#design", "#minimalism", "#typography", "#inspiration"]).
 2. "summary": A concise 1-2 sentence executive summary if it's an article/note, or empty string.
@@ -68,7 +68,7 @@ Content: ${(c.content || c.summary || c.ocrText || '').substring(0, 400)}`;
 
   const historyContext = history.slice(-4).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
 
-  const prompt = `You are OpenMind, the user's private, trusted Second Brain AI companion.
+  const prompt = `You are KernMind, the user's private, trusted Second Brain AI companion.
 You have instant access to the user's personal memories, articles, quotes, notes, and saved items.
 
 User query: "${query}"

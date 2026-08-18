@@ -1,15 +1,15 @@
 {
-  "name": "openmind-monorepo",
+  "name": "kernmind-monorepo",
   "version": "1.0.0",
   "private": true,
   "description": "The Open-Source, Privacy-First AI Second Brain. A 100% self-hosted, BYOK alternative to MyMind.",
   "scripts": {
-    "dev": "pnpm --filter openmind-web dev",
-    "build": "pnpm --filter openmind-web build",
-    "start": "pnpm --filter openmind-web start",
-    "lint": "pnpm --filter openmind-web lint",
-    "desktop": "pnpm --filter openmind-desktop start",
-    "desktop:build": "pnpm --filter openmind-desktop build"
+    "dev": "pnpm --filter kernmind-web dev",
+    "build": "pnpm --filter kernmind-web build",
+    "start": "pnpm --filter kernmind-web start",
+    "lint": "pnpm --filter kernmind-web lint",
+    "desktop": "pnpm --filter kernmind-desktop start",
+    "desktop:build": "pnpm --filter kernmind-desktop build"
   },
   "keywords": [
     "mymind-alternative",

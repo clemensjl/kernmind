@@ -23,14 +23,14 @@ import {
 
 export default function LandingPage() {
   const comparisonData = [
-    { feature: 'License & Source Code', openmind: '100% Open Source (MIT)', mymind: 'Proprietary / Closed Source' },
-    { feature: 'Annual Cost', openmind: '$0 / Free Forever', mymind: '$144 / year ($12/mo)' },
-    { feature: 'AI Engine', openmind: 'BYOK (OpenAI, Gemini, Claude, Groq, Ollama)', mymind: 'Proprietary Blackbox AI' },
-    { feature: 'Data Storage & Privacy', openmind: '100% Local-First (SQLite + Vector)', mymind: 'Proprietary Cloud Lock-in' },
-    { feature: 'Distraction-Free Reader', openmind: 'Full Reader + Typography Controls', mymind: 'Restricted to Mastermind Plan' },
-    { feature: 'Color Palette Extractor', openmind: 'Interactive Harmonies + Swatches', mymind: 'Basic Swatch Detection' },
-    { feature: 'Data Portability', openmind: '1-Click JSON & Markdown ZIP Export', mymind: 'Limited Export' },
-    { feature: 'Offline Support', openmind: 'Runs 100% offline with Ollama/Heuristics', mymind: 'Requires Internet & Cloud' },
+    { feature: 'License & Source Code', kernmind: '100% Open Source (MIT)', mymind: 'Proprietary / Closed Source' },
+    { feature: 'Annual Cost', kernmind: '$0 / Free Forever', mymind: '$144 / year ($12/mo)' },
+    { feature: 'AI Engine', kernmind: 'BYOK (OpenAI, Gemini, Claude, Groq, Ollama)', mymind: 'Proprietary Blackbox AI' },
+    { feature: 'Data Storage & Privacy', kernmind: '100% Local-First (SQLite + Vector)', mymind: 'Proprietary Cloud Lock-in' },
+    { feature: 'Distraction-Free Reader', kernmind: 'Full Reader + Typography Controls', mymind: 'Restricted to Mastermind Plan' },
+    { feature: 'Color Palette Extractor', kernmind: 'Interactive Harmonies + Swatches', mymind: 'Basic Swatch Detection' },
+    { feature: 'Data Portability', kernmind: '1-Click JSON & Markdown ZIP Export', mymind: 'Limited Export' },
+    { feature: 'Offline Support', kernmind: 'Runs 100% offline with Ollama/Heuristics', mymind: 'Requires Internet & Cloud' },
   ];
 
   return (
@@ -42,12 +42,12 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-xl bg-[#1C1917] text-white flex items-center justify-center shadow-xs">
               <Brain className="w-4 h-4 text-[#E07A5F]" />
             </div>
-            <span className="font-bold text-lg tracking-tight">OpenMind</span>
+            <span className="font-bold text-lg tracking-tight">KernMind</span>
           </Link>
 
           <div className="flex items-center gap-3">
             <a
-              href="https://github.com/clemensjl/openmind"
+              href="https://github.com/clemensjl/kernmind"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#44403C] hover:bg-[#F2EDE4] transition-colors"
@@ -79,7 +79,7 @@ export default function LandingPage() {
         </h1>
 
         <p className="text-base sm:text-xl text-[#78716C] max-w-2xl mx-auto leading-relaxed">
-          OpenMind is your personal, AI-powered extension of biological memory. Save articles, colors, quotes, notes, and visual inspiration with 1-click. 100% self-hosted & Bring Your Own Key.
+          KernMind is your personal, AI-powered extension of biological memory. Save articles, colors, quotes, notes, and visual inspiration with 1-click. 100% self-hosted & Bring Your Own Key.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
@@ -92,7 +92,7 @@ export default function LandingPage() {
           </Link>
 
           <a
-            href="https://github.com/clemensjl/openmind"
+            href="https://github.com/clemensjl/kernmind"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#EADBCE] text-[#1C1917] text-sm font-semibold hover:bg-[#F2EDE4] transition-all shadow-xs"
@@ -149,7 +149,7 @@ export default function LandingPage() {
       <section className="py-16 px-6 max-w-5xl mx-auto space-y-8">
         <div className="text-center space-y-3">
           <h2 className="text-3xl font-bold font-serif tracking-tight text-[#1C1917]">
-            OpenMind vs. mymind.com
+            KernMind vs. mymind.com
           </h2>
           <p className="text-sm text-[#78716C]">
             Why thousands of knowledge workers are switching to self-hosted, BYOK Second Brains.
@@ -161,7 +161,7 @@ export default function LandingPage() {
             <thead>
               <tr className="border-b border-[#EADBCE] bg-[#F9F6F0]">
                 <th className="p-4 text-xs font-semibold text-[#78716C] uppercase tracking-wider">Feature</th>
-                <th className="p-4 text-sm font-bold text-[#1C1917] bg-[#E07A5F]/10">OpenMind (Our Project)</th>
+                <th className="p-4 text-sm font-bold text-[#1C1917] bg-[#E07A5F]/10">KernMind (Our Project)</th>
                 <th className="p-4 text-xs font-semibold text-[#78716C] uppercase tracking-wider">mymind.com</th>
               </tr>
             </thead>
@@ -171,7 +171,7 @@ export default function LandingPage() {
                   <td className="p-4 font-medium text-[#1C1917]">{row.feature}</td>
                   <td className="p-4 font-semibold text-emerald-700 bg-[#E07A5F]/5 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>{row.openmind}</span>
+                    <span>{row.kernmind}</span>
                   </td>
                   <td className="p-4 text-[#78716C]">
                     <span>{row.mymind}</span>
@@ -200,8 +200,8 @@ export default function LandingPage() {
             <span>Terminal</span>
           </div>
           <p className="text-emerald-400"># Clone and launch with Docker Compose</p>
-          <p>git clone https://github.com/clemensjl/openmind.git</p>
-          <p>cd openmind</p>
+          <p>git clone https://github.com/clemensjl/openmind.git kernmind</p>
+          <p>cd kernmind</p>
           <p className="text-amber-300">docker compose up -d</p>
           <p className="text-neutral-400"># Open http://localhost:3000</p>
         </div>
@@ -210,7 +210,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="py-12 border-t border-[#EADBCE] px-6 text-center text-xs text-[#78716C] space-y-2">
         <p className="font-medium text-[#1C1917]">
-          OpenMind — Built with craftsmanship for free-thinking minds.
+          KernMind — Built with craftsmanship for free-thinking minds.
         </p>
         <p>Released under the permissive MIT License. 100% Open Source.</p>
       </footer>

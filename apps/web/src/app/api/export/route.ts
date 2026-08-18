@@ -51,7 +51,7 @@ ${card.ocrText ? `\n\n### Extracted Text (OCR):\n${card.ocrText}` : ''}
       return new Response(zipArrayBuffer, {
         headers: {
           'Content-Type': 'application/zip',
-          'Content-Disposition': `attachment; filename="openmind_export_${Date.now()}.zip"`,
+          'Content-Disposition': `attachment; filename="kernmind_export_${Date.now()}.zip"`,
         },
       });
     }
@@ -72,7 +72,7 @@ ${card.ocrText ? `\n\n### Extracted Text (OCR):\n${card.ocrText}` : ''}
     return new NextResponse(JSON.stringify(payload, null, 2), {
       headers: {
         'Content-Type': 'application/json',
-        'Content-Disposition': `attachment; filename="openmind_backup_${Date.now()}.json"`,
+        'Content-Disposition': `attachment; filename="kernmind_backup_${Date.now()}.json"`,
       },
     });
   } catch (error: any) {

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "OpenMind — AI Second Brain",
+  "name": "KernMind — AI Second Brain",
   "version": "1.0.0",
-  "description": "Remember everything, organize nothing. 1-click capture for articles, quotes, notes, colors, and images into your open-source OpenMind second brain.",
+  "description": "Remember everything, organize nothing. 1-click capture for articles, quotes, notes, colors, and images into your open-source KernMind second brain.",
   "permissions": [
     "activeTab",
     "contextMenus",
@@ -18,7 +18,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "OpenMind — Save to Brain",
+    "default_title": "KernMind — Save to Brain",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -44,7 +44,7 @@
         "default": "Ctrl+Shift+M",
         "mac": "Command+Shift+M"
       },
-      "description": "Open OpenMind capture popup"
+      "description": "Open KernMind capture popup"
     }
   }
 }
