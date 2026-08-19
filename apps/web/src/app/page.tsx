@@ -117,7 +117,7 @@ export default function DashboardPage() {
         onOpenAskMind={() => setIsAskMindOpen(true)}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 pb-24 md:pb-8 space-y-8">
         {/* Omnibar Floating Search */}
         <Omnibar
           filter={filter}
@@ -135,7 +135,7 @@ export default function DashboardPage() {
 
         {/* Empty state */}
         {!isLoading && cards.length === 0 && (
-          <div className="py-20 text-center max-w-md mx-auto space-y-4">
+          <div className="py-20 text-center max-w-md mx-auto space-y-4 px-4">
             <div className="w-12 h-12 rounded-2xl bg-secondary mx-auto flex items-center justify-center text-muted-foreground">
               <Inbox className="w-6 h-6" />
             </div>
@@ -180,18 +180,18 @@ export default function DashboardPage() {
       </main>
 
       {/* Floating Bottom Quick Bar on Mobile */}
-      <div className="fixed bottom-6 right-6 sm:hidden z-30 flex items-center gap-2">
+      <div className="fixed bottom-16 right-4 sm:hidden z-30 flex items-center gap-2">
         <button
           onClick={() => setIsAskMindOpen(true)}
-          className="p-3.5 rounded-full bg-card border border-border shadow-lg text-accent hover:bg-secondary transition-transform active:scale-95"
+          className="p-3 rounded-full bg-card/90 backdrop-blur-md border border-border shadow-lg text-accent hover:bg-secondary transition-transform active:scale-95"
         >
-          <Sparkles className="w-5 h-5" />
+          <Sparkles className="w-4 h-4" />
         </button>
         <button
           onClick={() => setIsQuickCaptureOpen(true)}
-          className="p-3.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:opacity-90 transition-transform active:scale-95"
+          className="p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:opacity-90 transition-transform active:scale-95"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
         </button>
       </div>
 
