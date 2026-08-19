@@ -37,8 +37,8 @@ export const Header: React.FC<HeaderProps> = ({
       <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-background/85 border-b border-border/50 transition-colors">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
-            <div className="w-8 h-8 rounded-xl overflow-hidden shadow-xs transition-transform group-hover:scale-105 flex items-center justify-center bg-card border border-border/60 shrink-0">
+          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+            <div className="w-8 h-8 rounded-xl overflow-hidden transition-transform group-hover:scale-105 flex items-center justify-center shrink-0">
               <img src="/logo.png" alt="KernMind" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col">
