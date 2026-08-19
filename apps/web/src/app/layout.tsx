@@ -38,6 +38,7 @@ export const metadata: Metadata = {
 };
 
 import { CustomContextMenu } from '@/components/ui/CustomContextMenu';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 export default function RootLayout({
   children,
@@ -45,10 +46,33 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('kernmind_theme');
+                  var isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  if (isDark) {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.colorScheme = 'dark';
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.style.colorScheme = 'light';
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-background text-foreground font-sans selection:bg-accent/20 selection:text-accent">
-        {children}
-        <CustomContextMenu />
+        <ThemeProvider>
+          {children}
+          <CustomContextMenu />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -16,10 +16,15 @@ import {
   Check,
   Server,
   FileArchive,
-  Info
+  Info,
+  Sun,
+  Moon,
+  Laptop
 } from 'lucide-react';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 export default function SettingsPage() {
+  const { themeSetting, resolvedTheme, setTheme } = useTheme();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -288,6 +293,81 @@ export default function SettingsPage() {
                 />
                 <span>Enable Image OCR Text Extraction</span>
               </label>
+            </div>
+          </div>
+
+          {/* Appearance & Color Mode */}
+          <div className="p-6 rounded-3xl bg-card border border-border/80 shadow-xs space-y-6">
+            <div className="flex items-center gap-2.5 pb-3 border-b border-border/50">
+              <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500">
+                <Palette className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-foreground">Appearance & Theme</h2>
+                <p className="text-xs text-muted-foreground">Choose your visual aesthetic or sync seamlessly with your operating system.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* System Auto */}
+              <button
+                type="button"
+                onClick={() => setTheme('system')}
+                className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-28 ${
+                  themeSetting === 'system'
+                    ? 'border-accent bg-accent/5 ring-1 ring-accent text-foreground'
+                    : 'border-border/60 bg-secondary/30 hover:border-border hover:bg-secondary/60 text-muted-foreground'
+                }`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <Laptop className="w-5 h-5 text-accent" />
+                  {themeSetting === 'system' && <Check className="w-4 h-4 text-accent" />}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-foreground">System Sync</div>
+                  <div className="text-[10px] text-muted-foreground">Auto matches OS ({resolvedTheme})</div>
+                </div>
+              </button>
+
+              {/* Light Mode */}
+              <button
+                type="button"
+                onClick={() => setTheme('light')}
+                className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-28 ${
+                  themeSetting === 'light'
+                    ? 'border-accent bg-accent/5 ring-1 ring-accent text-foreground'
+                    : 'border-border/60 bg-secondary/30 hover:border-border hover:bg-secondary/60 text-muted-foreground'
+                }`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <Sun className="w-5 h-5 text-amber-500" />
+                  {themeSetting === 'light' && <Check className="w-4 h-4 text-accent" />}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-foreground">Light Mode</div>
+                  <div className="text-[10px] text-muted-foreground">Warm milk cream aesthetic</div>
+                </div>
+              </button>
+
+              {/* Dark Mode */}
+              <button
+                type="button"
+                onClick={() => setTheme('dark')}
+                className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between h-28 ${
+                  themeSetting === 'dark'
+                    ? 'border-accent bg-accent/5 ring-1 ring-accent text-foreground'
+                    : 'border-border/60 bg-secondary/30 hover:border-border hover:bg-secondary/60 text-muted-foreground'
+                }`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <Moon className="w-5 h-5 text-indigo-400" />
+                  {themeSetting === 'dark' && <Check className="w-4 h-4 text-accent" />}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-foreground">Dark Mode</div>
+                  <div className="text-[10px] text-muted-foreground">Obsidian contrast & deep black</div>
+                </div>
+              </button>
             </div>
           </div>
 

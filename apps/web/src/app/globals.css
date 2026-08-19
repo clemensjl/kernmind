@@ -20,19 +20,19 @@
   }
 
   .dark {
-    --background: #09090B;
-    --foreground: #FAFAFA;
-    --card: #141417;
-    --card-foreground: #FAFAFA;
-    --primary: #FAFAFA;
-    --primary-foreground: #09090B;
-    --secondary: #202024;
-    --secondary-foreground: #D4D4D8;
-    --muted: #27272A;
-    --muted-foreground: #A1A1AA;
-    --accent: #F43F5E;
+    --background: #0C0C0E;
+    --foreground: #F4F4F5;
+    --card: #151519;
+    --card-foreground: #F4F4F5;
+    --primary: #F4F4F5;
+    --primary-foreground: #0C0C0E;
+    --secondary: #1F1F26;
+    --secondary-foreground: #E4E4E7;
+    --muted: #272732;
+    --muted-foreground: #9CA3AF;
+    --accent: #E07A5F;
     --accent-foreground: #FFFFFF;
-    --border: #27272A;
+    --border: #262633;
   }
 
   .theme-sepia {
@@ -76,6 +76,14 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(120, 113, 108, 0.4);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(161, 161, 170, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(161, 161, 170, 0.4);
 }
 
 /* Masonry Columns */

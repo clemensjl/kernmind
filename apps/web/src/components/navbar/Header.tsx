@@ -15,6 +15,8 @@ import {
   Sun
 } from 'lucide-react';
 
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
+
 interface HeaderProps {
   onOpenQuickCapture: () => void;
   onOpenAskMind: () => void;
@@ -75,6 +77,9 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+          {/* Theme Toggle Button */}
+          <ThemeToggle />
+
           {/* Ask AI Button */}
           <button
             onClick={onOpenAskMind}

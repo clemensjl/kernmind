@@ -18,8 +18,11 @@ import {
   Search,
   Quote,
   Check,
-  Share2
+  Share2,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 interface MenuPosition {
   x: number;
@@ -35,6 +38,7 @@ interface ClickedCardInfo {
 }
 
 export const CustomContextMenu: React.FC = () => {
+  const { resolvedTheme, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState<MenuPosition>({ x: 0, y: 0 });
   const [selectedText, setSelectedText] = useState('');
@@ -407,6 +411,21 @@ export const CustomContextMenu: React.FC = () => {
           >
             <Settings className="w-4 h-4 text-muted-foreground shrink-0" />
             <span>Settings &amp; BYOK Keys</span>
+          </button>
+
+          <button
+            onClick={() => {
+              closeMenu();
+              toggleTheme();
+            }}
+            className="w-full flex items-center gap-2.5 px-3.5 py-2 text-xs font-medium text-foreground hover:bg-secondary transition-colors text-left"
+          >
+            {resolvedTheme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400 shrink-0" />
+            ) : (
+              <Moon className="w-4 h-4 text-slate-700 shrink-0" />
+            )}
+            <span>{resolvedTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}</span>
           </button>
 
           <button
