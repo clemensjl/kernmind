@@ -100,6 +100,23 @@ document.getElementById('btn-save-note').addEventListener('click', async () => {
   }
 });
 
+// Checklist button handler
+const btnChecklist = document.getElementById('btn-checklist');
+if (btnChecklist) {
+  btnChecklist.addEventListener('click', () => {
+    const textarea = document.getElementById('quick-note');
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const val = textarea.value;
+    const prefix = start > 0 && val[start - 1] !== '\n' ? '\n- [ ] ' : '- [ ] ';
+    textarea.value = val.substring(0, start) + prefix + val.substring(end);
+    textarea.focus();
+    const nextPos = start + prefix.length;
+    textarea.setSelectionRange(nextPos, nextPos);
+  });
+}
+
 // Eyedropper tool
 document.getElementById('btn-eyedropper').addEventListener('click', async () => {
   if (!window.EyeDropper) {

@@ -44,10 +44,16 @@
     <div class="note-section">
       <textarea id="quick-note" placeholder="Write a note, quote, or paste content..." rows="3"></textarea>
       <div class="note-actions">
-        <button id="btn-eyedropper" class="tool-btn" title="Pick Color on Screen">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0L19 11Z"/><path d="m5 2 5 5"/><path d="m2 5 5 5"/></svg>
-          <span class="tool-label">Eyedropper</span>
-        </button>
+        <div style="display: flex; gap: 4px;">
+          <button id="btn-checklist" class="tool-btn" title="Add task checklist item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span class="tool-label">Checklist</span>
+          </button>
+          <button id="btn-eyedropper" class="tool-btn" title="Pick Color on Screen">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0L19 11Z"/><path d="m5 2 5 5"/><path d="m2 5 5 5"/></svg>
+            <span class="tool-label">Color</span>
+          </button>
+        </div>
         <button id="btn-save-note" class="secondary-btn">Save Note</button>
       </div>
     </div>
